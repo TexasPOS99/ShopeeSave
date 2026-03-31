@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตัวช่วยสั่งของ Shopee</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #ff6b35;
+      --primary-2: #ff8a5b;
+      --green: #16a34a;
+      --red: #dc2626;
+      --blue: #2563eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+      --cat-pet: #ffe4ef;
+      --cat-home: #e0f2fe;
+      --cat-bath: #ecfccb;
+      --cat-kitchen: #fef3c7;
+      --cat-shop: #dcfce7;
+      --cat-elec: #ede9fe;
+      --cat-other: #f3f4f6;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #fff7f3 0%, var(--bg) 220px);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 34px;
+    }
+
+    .hero {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.45rem, 2.8vw, 2.2rem);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .sync-status {
+      min-width: 240px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .sync-status strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+    .toolbar {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1.2fr .9fr auto auto auto;
+      gap: 10px;
+    }
+
+    .input, select, .btn {
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      min-height: 46px;
+      padding: 0 14px;
+      font-size: 0.97rem;
+    }
+
+    .input:focus, select:focus {
+      outline: none;
+      border-color: #f9a98a;
+      box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
+    }
+
+    .btn {
+      cursor: pointer;
+      font-weight: 700;
+      transition: .18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      border: 0;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 10px 22px rgba(255,107,53,.24);
+    }
+    .btn-soft { background: #fff; color: var(--text); }
+    .btn-blue { background: #eff6ff; color: var(--blue); border-color: #bfdbfe; }
+    .btn-danger { background: #fef2f2; color: var(--red); border-color: #fecaca; }
+    .btn-green { background: #f0fdf4; color: var(--green); border-color: #bbf7d0; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 18px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .tab.active {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat .label { color: var(--muted); font-size: 0.88rem; }
+    .stat .value { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.35;
+    }
+
+    .meta, .code-box {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .code-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      word-break: break-all;
+    }
+
+    .price {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+      padding: 8px 10px;
+      border-radius: 999px;
+      width: fit-content;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    .cat-แมว { background: var(--cat-pet); }
+    .cat-ของใช้ในบ้าน { background: var(--cat-home); }
+    .cat-ห้องน้ำ { background: var(--cat-bath); }
+    .cat-ครัว { background: var(--cat-kitchen); }
+    .cat-ร้านค้า { background: var(--cat-shop); }
+    .cat-ของใช้ไฟฟ้า { background: var(--cat-elec); }
+    .cat-ทั่วไป { background: var(--cat-other); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .actions .btn {
+      flex: 1 1 120px;
+      min-height: 40px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .empty {
+      background: rgba(255,255,255,.75);
+      border: 1px dashed #cbd5e1;
+      border-radius: 22px;
+      padding: 32px 18px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .modal-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 20;
+    }
+
+    .modal-wrap.show { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 24px 70px rgba(15,23,42,.25);
+      border: 1px solid rgba(255,255,255,.85);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: .92rem;
+      font-weight: 700;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    textarea.input {
+      min-height: 90px;
+      padding: 12px 14px;
+      resize: vertical;
+    }
+
+    .modal-foot {
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 980px) {
+      .toolbar { grid-template-columns: 1fr 1fr 1fr 1fr; }
+      .toolbar .search-col { grid-column: 1 / -1; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .container { width: min(100% - 16px, 1180px); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .toolbar .search-col,
+      .toolbar .wide-mobile { grid-column: 1 / -1; }
+      .grid { grid-template-columns: 1fr; }
+      .modal-body { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .actions .btn { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="title-row">
+        <div>
+          <h1>ตัวช่วยสั่งของ Shopee</h1>
+          <p class="subtitle">รวมโค้ดสินค้า ลิงก์ร้านค้า และรายการที่ใช้ประจำ แยกหมวด ค้นหาไว แก้ไขได้ เพิ่ม/ลบได้</p>
+        </div>
+        <div class="sync-status" id="syncStatus">
+          <strong>โหมดจัดเก็บ: Local</strong>
+          ใช้งานได้ทันทีในเครื่องนี้<br>
+          ถ้าต้องการซิงก์ข้ามเครื่อง ให้ใส่ Firebase config ในไฟล์นี้
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" class="input search-col" placeholder="ค้นหาชื่อสินค้า ร้านค้า โค้ด หรือลิงก์..." />
+        <select id="typeFilter">
+          <option value="all">ทุกประเภท</option>
+          <option value="code">เฉพาะที่มีโค้ด</option>
+          <option value="link">เฉพาะที่มีลิงก์</option>
+        </select>
+        <select id="sortBy">
+          <option value="updated_desc">เรียง: แก้ไขล่าสุด</option>
+          <option value="name_asc">เรียง: ชื่อ A-Z</option>
+          <option value="category_asc">เรียง: หมวดหมู่</option>
+        </select>
+        <button class="btn btn-soft" id="exportBtn">Export JSON</button>
+        <button class="btn btn-primary wide-mobile" id="addBtn">+ เพิ่มรายการ</button>
+      </div>
+    </section>
+
+    <div class="tabs" id="tabs"></div>
+
+    <section class="stats">
+      <div class="stat"><div class="label">จำนวนทั้งหมด</div><div class="value" id="totalCount">0</div></div>
+      <div class="stat"><div class="label">มีโค้ด</div><div class="value" id="codeCount">0</div></div>
+      <div class="stat"><div class="label">มีลิงก์</div><div class="value" id="linkCount">0</div></div>
+      <div class="stat"><div class="label">หมวดหมู่</div><div class="value" id="catCount">0</div></div>
+    </section>
+
+    <section id="list" class="grid"></section>
+    <div id="emptyState" class="empty" style="display:none;">ยังไม่มีรายการที่ตรงกับการค้นหา ลองเปลี่ยนคำค้นหรือกดเพิ่มรายการใหม่</div>
+
+    <div class="footer-note">
+      ไฟล์นี้เป็นหน้าเดียว ใช้งานบน GitHub Pages ได้ • เพิ่ม/ลบ/แก้ไขได้ • คัดลอกโค้ดได้ • เปิดลิงก์ได้
+    </div>
+  </div>
+
+  <div class="modal-wrap" id="modalWrap">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <strong id="modalTitle">เพิ่มรายการ</strong>
+          <div class="small-note">กรอกเท่าที่มี จะเป็นโค้ดหรือลิงก์อย่างใดอย่างหนึ่งก็ได้</div>
+        </div>
+        <button class="btn btn-soft" id="closeModalBtn">ปิด</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>ชื่อรายการ</label>
+          <input class="input" id="fName" placeholder="เช่น เปียกแมว 12 ซอง" />
+        </div>
+        <div class="field">
+          <label>หมวดหมู่</label>
+          <select id="fCategory">
+            <option>แมว</option>
+            <option>ของใช้ในบ้าน</option>
+            <option>ห้องน้ำ</option>
+            <option>ครัว</option>
+            <option>ร้านค้า</option>
+            <option>ของใช้ไฟฟ้า</option>
+            <option>ทั่วไป</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>โค้ด</label>
+          <input class="input" id="fCode" placeholder="เช่น BCZ-QGS-JMY" />
+        </div>
+        <div class="field">
+          <label>ราคา</label>
+          <input class="input" id="fPrice" placeholder="เช่น 140" />
+        </div>
+        <div class="field">
+          <label>ร้านค้า</label>
+          <input class="input" id="fStore" placeholder="เช่น pettoville789" />
+        </div>
+        <div class="field">
+          <label>ลิงก์</label>
+          <input class="input" id="fLink" placeholder="https://..." />
+        </div>
+        <div class="field full">
+          <label>โน้ตเพิ่มเติม</label>
+          <textarea class="input" id="fNote" placeholder="เช่น ซื้อประจำ / คอมดี / ร้านนี้ส่งไว"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-soft" id="cancelBtn">ยกเลิก</button>
+        <button class="btn btn-primary" id="saveBtn">บันทึกรายการ</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" style="display:none" />
+
+  <script>
+    /********************************************************************
+     * ถ้าต้องการเก็บข้อมูลข้ามเครื่องแบบจริงจัง ให้ใส่ Firebase config ด้านล่าง
+     * จากนั้นเปิด useCloudSync = true
+     * ถ้ายังไม่ใส่ ระบบจะเก็บใน localStorage ของเครื่องนี้เท่านั้น
+     ********************************************************************/
+    const useCloudSync = false;
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
+    const LOCAL_KEY = 'shopee-helper-items-v1';
+    const SETTINGS_KEY = 'shopee-helper-settings-v1';
+
+    const seedData = [
+      { id: uid(), name: 'กาแฟซอง', code: 'BCZ-QGS-JMY', price: '140', store: '', link: '', note: '', category: 'ทั่วไป', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'เปียกแมว 12 ซอง', code: 'BQQ-UNQ-PYT', price: '', store: 'pettoville789', link: '', note: '', category: 'แมว', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'เปียกแมว 1 ซอง', code: 'ADZ-XXZ-UMW', price: '', store: 'petwogetger 2', link: '', note: '', category: 'แมว', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'เปียก Meo 12 ซอง', code: 'ASD-KCW-DMF', price: '', store: 'starpetshop', link: '', note: '', category: 'แมว', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ร้านของใช้ห้องน้ำ', code: '', price: '', store: '', link: 'https://s.shopee.co.th/qf5NusBsJ', note: '', category: 'ห้องน้ำ', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ร้านครีมอาบน้ำ', code: '', price: '', store: '', link: 'https://s.shopee.co.th/4qBE9N5TVY', note: '', category: 'ห้องน้ำ', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ของใช้ในบ้าน', code: '', price: '', store: '', link: 'https://s.shopee.co.th/8fNwicLqnT', note: '', category: 'ของใช้ในบ้าน', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ของใช้ในครัว', code: '', price: '', store: '', link: 'https://s.shopee.co.th/2LTtB9NVS7', note: '', category: 'ครัว', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ของใช้ในบ้าน-ครัว', code: '', price: '', store: '', link: 'https://th.shp.ee/UjE9J2NP', note: '', category: 'ร้านค้า', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ของใช้ในบ้าน-ครัว', code: '', price: '', store: '', link: 'https://th.shp.ee/JTyw9zGo', note: '', category: 'ร้านค้า', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ทรายแมว', code: 'AXH-JFH-ETA', price: '', store: '', link: '', note: '', category: 'แมว', createdAt: nowISO(), updatedAt: nowISO() },
+      { id: uid(), name: 'ปลั๊กไฟ', code: 'BNU-EDP-DEW', price: '', store: '', link: '', note: '', category: 'ของใช้ไฟฟ้า', createdAt: nowISO(), updatedAt: nowISO() }
+    ];
+
+    let items = [];
+    let activeTab = 'ทั้งหมด';
+    let editingId = null;
+    let appSettings = loadSettings();
+    let firestoreApi = null;
+
+    const el = {
+      list: document.getElementById('list'),
+      emptyState: document.getElementById('emptyState'),
+      searchInput: document.getElementById('searchInput'),
+      typeFilter: document.getElementById('typeFilter'),
+      sortBy: document.getElementById('sortBy'),
+      tabs: document.getElementById('tabs'),
+      totalCount: document.getElementById('totalCount'),
+      codeCount: document.getElementById('codeCount'),
+      linkCount: document.getElementById('linkCount'),
+      catCount: document.getElementById('catCount'),
+      modalWrap: document.getElementById('modalWrap'),
+      modalTitle: document.getElementById('modalTitle'),
+      syncStatus: document.getElementById('syncStatus'),
+      importFile: document.getElementById('importFile'),
+      fName: document.getElementById('fName'),
+      fCategory: document.getElementById('fCategory'),
+      fCode: document.getElementById('fCode'),
+      fPrice: document.getElementById('fPrice'),
+      fStore: document.getElementById('fStore'),
+      fLink: document.getElementById('fLink'),
+      fNote: document.getElementById('fNote')
+    };
+
+    init();
+
+    async function init() {
+      bindEvents();
+      await initStorage();
+      renderTabs();
+      render();
+    }
+
+    async function initStorage() {
+      if (useCloudSync && hasFirebaseConfig()) {
+        try {
+          await initFirebaseSync();
+          return;
+        } catch (err) {
+          console.error(err);
+          setSyncStatus('Cloud ตั้งค่าไม่สมบูรณ์', 'ตอนนี้สลับกลับมาใช้ Local ชั่วคราว');
+        }
+      }
+
+      const raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) {
+        items = JSON.parse(raw);
+      } else {
+        items = seedData;
+        saveLocal();
+      }
+      setSyncStatus('โหมดจัดเก็บ: Local', 'ข้อมูลจะอยู่ในเครื่องนี้เท่านั้น • ถ้าต้องการข้ามเครื่อง ให้ใส่ Firebase config');
+    }
+
+    function bindEvents() {
+      el.searchInput.value = appSettings.search || '';
+      el.typeFilter.value = appSettings.typeFilter || 'all';
+      el.sortBy.value = appSettings.sortBy || 'updated_desc';
+
+      el.searchInput.addEventListener('input', e => {
+        appSettings.search = e.target.value;
+        saveSettings();
+        render();
+      });
+      el.typeFilter.addEventListener('change', e => {
+        appSettings.typeFilter = e.target.value;
+        saveSettings();
+        render();
+      });
+      el.sortBy.addEventListener('change', e => {
+        appSettings.sortBy = e.target.value;
+        saveSettings();
+        render();
+      });
+
+      document.getElementById('addBtn').addEventListener('click', () => openModal());
+      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+      document.getElementById('cancelBtn').addEventListener('click', closeModal);
+      document.getElementById('saveBtn').addEventListener('click', saveItemFromForm);
+      document.getElementById('exportBtn').addEventListener('click', exportJson);
+
+      const importBtn = document.createElement('button');
+      importBtn.className = 'btn btn-blue';
+      importBtn.textContent = 'Import JSON';
+      importBtn.addEventListener('click', () => el.importFile.click());
+      document.querySelector('.toolbar').insertBefore(importBtn, document.getElementById('addBtn'));
+
+      el.importFile.addEventListener('change', importJson);
+
+      el.modalWrap.addEventListener('click', e => {
+        if (e.target === el.modalWrap) closeModal();
+      });
+    }
+
+    function renderTabs() {
+      const baseTabs = ['ทั้งหมด', 'แมว', 'ของใช้ในบ้าน', 'ห้องน้ำ', 'ครัว', 'ร้านค้า', 'ของใช้ไฟฟ้า', 'ทั่วไป'];
+      el.tabs.innerHTML = '';
+      baseTabs.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (activeTab === tab ? ' active' : '');
+        btn.textContent = tab;
+        btn.addEventListener('click', () => {
+          activeTab = tab;
+          renderTabs();
+          render();
+        });
+        el.tabs.appendChild(btn);
+      });
+    }
+
+    function render() {
+      const filtered = getFilteredItems();
+      renderStats();
+
+      el.list.innerHTML = '';
+      el.emptyState.style.display = filtered.length ? 'none' : 'block';
+
+      filtered.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-head">
+            <div>
+              <h3>${escapeHtml(item.name || '-')}</h3>
+              <div class="meta">${item.store ? 'ร้าน: ' + escapeHtml(item.store) : 'ยังไม่ระบุร้าน'}${item.updatedAt ? ' • แก้ไข ' + formatDate(item.updatedAt) : ''}</div>
+            </div>
+          </div>
+          <div class="badges">
+            <span class="badge cat-${escapeClass(item.category || 'ทั่วไป')}">${escapeHtml(item.category || 'ทั่วไป')}</span>
+            ${item.code ? '<span class="badge cat-ทั่วไป">มีโค้ด</span>' : ''}
+            ${item.link ? '<span class="badge cat-ทั่วไป">มีลิงก์</span>' : ''}
+          </div>
+          ${item.price ? `<div class="price">ราคา: ${escapeHtml(item.price)} บ.</div>` : ''}
+          ${item.code ? `<div class="code-box">${escapeHtml(item.code)}</div>` : '<div class="meta">ไม่มีโค้ด</div>'}
+          ${item.link ? `<div class="meta"><a href="${escapeAttr(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link)}</a></div>` : ''}
+          ${item.note ? `<div class="meta">โน้ต: ${escapeHtml(item.note)}</div>` : ''}
+          <div class="actions">
+            ${item.code ? '<button class="btn btn-green" data-action="copy">คัดลอกโค้ด</button>' : ''}
+            ${item.link ? '<button class="btn btn-blue" data-action="open">เปิดลิงก์</button>' : ''}
+            <button class="btn btn-soft" data-action="edit">แก้ไข</button>
+            <button class="btn btn-danger" data-action="delete">ลบ</button>
+          </div>
+        `;
+
+        card.querySelectorAll('[data-action]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            if (action === 'copy') copyText(item.code || '');
+            if (action === 'open') window.open(item.link, '_blank', 'noopener');
+            if (action === 'edit') openModal(item);
+            if (action === 'delete') removeItem(item.id);
+          });
+        });
+
+        el.list.appendChild(card);
+      });
+    }
+
+    function getFilteredItems() {
+      const search = (appSettings.search || '').trim().toLowerCase();
+      const typeFilter = appSettings.typeFilter || 'all';
+      const sortBy = appSettings.sortBy || 'updated_desc';
+
+      let out = [...items];
+
+      if (activeTab !== 'ทั้งหมด') {
+        out = out.filter(i => (i.category || 'ทั่วไป') === activeTab);
+      }
+
+      if (typeFilter === 'code') out = out.filter(i => !!i.code);
+      if (typeFilter === 'link') out = out.filter(i => !!i.link);
+
+      if (search) {
+        out = out.filter(i => [i.name, i.code, i.store, i.link, i.note, i.category, i.price]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(search));
+      }
+
+      out.sort((a, b) => {
+        if (sortBy === 'name_asc') return (a.name || '').localeCompare(b.name || '', 'th');
+        if (sortBy === 'category_asc') return (a.category || '').localeCompare(b.category || '', 'th') || (a.name || '').localeCompare(b.name || '', 'th');
+        return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
+      });
+
+      return out;
+    }
+
+    function renderStats() {
+      el.totalCount.textContent = items.length;
+      el.codeCount.textContent = items.filter(i => i.code).length;
+      el.linkCount.textContent = items.filter(i => i.link).length;
+      el.catCount.textContent = new Set(items.map(i => i.category || 'ทั่วไป')).size;
+    }
+
+    function openModal(item = null) {
+      editingId = item?.id || null;
+      el.modalTitle.textContent = editingId ? 'แก้ไขรายการ' : 'เพิ่มรายการ';
+      el.fName.value = item?.name || '';
+      el.fCategory.value = item?.category || 'ทั่วไป';
+      el.fCode.value = item?.code || '';
+      el.fPrice.value = item?.price || '';
+      el.fStore.value = item?.store || '';
+      el.fLink.value = item?.link || '';
+      el.fNote.value = item?.note || '';
+      el.modalWrap.classList.add('show');
+      setTimeout(() => el.fName.focus(), 20);
+    }
+
+    function closeModal() {
+      editingId = null;
+      el.modalWrap.classList.remove('show');
+    }
+
+    async function saveItemFromForm() {
+      const payload = {
+        name: el.fName.value.trim(),
+        category: el.fCategory.value,
+        code: el.fCode.value.trim(),
+        price: el.fPrice.value.trim(),
+        store: el.fStore.value.trim(),
+        link: el.fLink.value.trim(),
+        note: el.fNote.value.trim()
+      };
+
+      if (!payload.name) {
+        alert('กรุณาใส่ชื่อรายการ');
+        el.fName.focus();
+        return;
+      }
+
+      if (payload.link && !/^https?:\/\//i.test(payload.link)) {
+        alert('ลิงก์ควรขึ้นต้นด้วย http:// หรือ https://');
+        el.fLink.focus();
+        return;
+      }
+
+      if (editingId) {
+        items = items.map(i => i.id === editingId ? { ...i, ...payload, updatedAt: nowISO() } : i);
+      } else {
+        items.unshift({ id: uid(), ...payload, createdAt: nowISO(), updatedAt: nowISO() });
+      }
+
+      await persistItems();
+      closeModal();
+      render();
+    }
+
+    async function removeItem(id) {
+      if (!confirm('ต้องการลบรายการนี้ใช่ไหม?')) return;
+      items = items.filter(i => i.id !== id);
+      await persistItems();
+      render();
+    }
+
+    async function persistItems() {
+      if (firestoreApi) {
+        await firestoreApi.saveAll(items);
+      } else {
+        saveLocal();
+      }
+    }
+
+    function saveLocal() {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'shopee-helper-data.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    async function importJson(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed)) throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+        items = parsed.map(x => ({
+          id: x.id || uid(),
+          name: x.name || '',
+          category: x.category || 'ทั่วไป',
+          code: x.code || '',
+          price: x.price || '',
+          store: x.store || '',
+          link: x.link || '',
+          note: x.note || '',
+          createdAt: x.createdAt || nowISO(),
+          updatedAt: x.updatedAt || nowISO()
+        }));
+        await persistItems();
+        render();
+        alert('นำเข้าข้อมูลสำเร็จ');
+      } catch (err) {
+        console.error(err);
+        alert('นำเข้าไม่สำเร็จ: ไฟล์ JSON ไม่ถูกต้อง');
+      } finally {
+        e.target.value = '';
+      }
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('คัดลอกโค้ดแล้ว');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        toast('คัดลอกโค้ดแล้ว');
+      }
+    }
+
+    function toast(message) {
+      const div = document.createElement('div');
+      div.textContent = message;
+      div.style.cssText = 'position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:999px;z-index:99;box-shadow:0 12px 30px rgba(0,0,0,.2);font-size:.92rem';
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 1500);
+    }
+
+    function setSyncStatus(title, line2) {
+      el.syncStatus.innerHTML = `<strong>${escapeHtml(title)}</strong>${escapeHtml(line2).replace(/\n/g, '<br>')}`;
+    }
+
+    function hasFirebaseConfig() {
+      return firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId;
+    }
+
+    async function initFirebaseSync() {
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+      const { getAuth, signInAnonymously } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+      const { getFirestore, doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const projectSafeKey = 'default_shared_list';
+
+      await signInAnonymously(auth);
+      const ref = doc(db, 'lists', projectSafeKey);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        items = Array.isArray(snap.data().items) ? snap.data().items : seedData;
+      } else {
+        items = seedData;
+        await setDoc(ref, { items, updatedAt: nowISO() });
+      }
+
+      firestoreApi = {
+        saveAll: async (nextItems) => {
+          await setDoc(ref, { items: nextItems, updatedAt: nowISO() });
+        }
+      };
+
+      setSyncStatus('โหมดจัดเก็บ: Cloud', 'เปิดซิงก์ข้ามเครื่องแล้ว • ให้เปิดไฟล์นี้ด้วย Firebase config เดียวกันทุกเครื่อง');
+    }
+
+    function uid() {
+      return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    }
+    function nowISO() { return new Date().toISOString(); }
+    function formatDate(iso) {
+      try {
+        return new Date(iso).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+      } catch { return '-'; }
+    }
+    function loadSettings() {
+      try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
+      catch { return {}; }
+    }
+    function saveSettings() {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings));
+    }
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"]/g, s => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[s]));
+    }
+    function escapeAttr(str) { return escapeHtml(str).replace(/'/g, '&#39;'); }
+    function escapeClass(str) { return String(str).replace(/[^ก-๙a-zA-Z0-9_-]/g, ''); }
+  </script>
+</body>
+</html>
